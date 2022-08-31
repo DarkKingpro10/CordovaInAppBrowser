@@ -7,25 +7,87 @@ function redirectTo(location) {
     //showPleasewait('Redirecting','Please wait');
     var d = setInterval(function () {
         window.open(location, '_self','location=no,zoom=no,toolbar=no');
-        window.open.addEventListener('loadStart',downLoad(e));
+        window.open.addEventListener('loadstop',downLoad(e));
         clearInterval(d);
     }, 1850);
 }
 
 function downLoad(e){
-    var url = e.url;
-    var extension = url.substr(url.lenght - 4);
-    if(extension == '.pdf'){
-        var targetPath = cordova.file.documentsDirectory + "recipt.pdf";
-        var options = {};
-        var args = {
-            url : url,
-            targetPath: targetPath,
-            options: options
-        };
-        
+    if(refTemp.url.includes('pdf')) {
+        rtaParam = getURLParams('pdf', refTemp.url);
+
+        if(rtaParam != null)
+            downloadFileFromServer(rtaParam);
+        return;
     }
 }
+
+function getURLParams( name, url ) {
+    try {
+        if (!url)
+            url = location.href;
+        name = name.replace(/[\[]/, "\\\[").replace(/[\]]/, "\\\]");
+        var regexS = "[\\?&]" + name + "=([^&#]*)";
+        var regex = new RegExp(regexS);
+        var results = regex.exec(url);
+        return results == null ? null : results[1];
+    } catch (e) {
+        showSMS(e);
+        return null;
+    }
+}
+
+function downloadFileFromServer(fileServerURL){
+    try {
+        var Downloader = window.plugins.Downloader;
+        var fileName = fileServerURL.substring(fileServerURL.lastIndexOf("/") + 1);
+    
+        var downloadSuccessCallback = function(result) {
+              console.log(result.path); 
+    
+        };
+    
+        var downloadErrorCallback = function(error) {
+            // error: string
+            console.log(error);
+        };
+    
+        //TODO cordova.file.documentsDirectory for iOS
+    
+        var options = {
+            title: 'Descarga de '+ fileName, // Download Notification Title
+            url: fileServerURL, // File Url
+            path: fileName, // The File Name with extension
+            description: 'La descarga del archivo esta lista', // Download description Notification String
+            visible: true, // This download is visible and shows in the notifications while in progress and after completion.
+            folder: "Download" // Folder to save the downloaded file, if not exist it will be created
+        };
+    
+        Downloader.download(options, downloadSuccessCallback, downloadErrorCallback);
+    } catch (e) {
+        console.log(e);
+    }
+}
+function downloadReceipt(args) {
+    var fileTransfer = new FileTransfer();
+    var uri = encodeURI(args.url);
+  
+    fileTransfer.download(
+      uri, // file's uri
+      args.targetPath, // where will be saved
+      function(entry) {
+        console.log("download complete: " + entry.toURL());
+        window.open(entry.toURL(), '_blank', 'location=no,closebuttoncaption=Cerrar,toolbar=yes,enableViewportScale=yes');
+      },
+      function(error) {
+        console.log("download error source " + error.source);
+        console.log("download error target " + error.target);
+        console.log("upload error code" + error.code);
+      },
+      true,
+      args.options
+    );
+  }
 
 var app = {
     // Application Constructor
@@ -45,7 +107,7 @@ var app = {
         if (navigator.connection.type == Connection.NONE){
             navigator.notification.alert('An internet connection is required to continue');
         } else {
-            redirectTo("http://192.168.1.7/despEsquivel-Mobile/index.html");
+            redirectTo("http://192.168.1.7/despEsquivel/views/index.html");
         }
     }
 };

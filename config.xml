@@ -13,8 +13,13 @@
     <allow-intent href="https://*/*" />
 
     <platform name="android">
-        <preference name="SplashScreenDelay" value="0"/>
-        <preference name="AutoHideSplashScreen" value="true" />
+        <allow-intent href="market:*" />
+        <icon src="res/images/ldpi.png" density="ldpi" />
+        <icon src="res/images/mdpi.png" density="mdpi" />
+        <icon src="res/images/hdpi.png" density="hdpi" />
+        <icon src="res/images/xhdpi.png" density="xhdpi" />
+        <icon src="res/images/xxhdpi.png" density="xxhdpi" />
+        <icon src="res/images/xxxhdpi.png" density="xxxhdpi" />
     </platform>
-    
+
 </widget>
