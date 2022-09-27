@@ -7,19 +7,17 @@ function redirectTo(location) {
     //showPleasewait('Redirecting','Please wait');
     var d = setInterval(function () {
         window.open(location, '_self','location=no,zoom=no,toolbar=no');
-        window.open.addEventListener('loadstop',downLoad(e));
+        //window.open.addEventListener('message',getUrlBrow());
         clearInterval(d);
     }, 1850);
 }
 
-function downLoad(e){
-    if(refTemp.url.includes('pdf')) {
-        rtaParam = getURLParams('pdf', refTemp.url);
+function getUrlBrow(){
+    navigator.notification.alert('hola');
+}
 
-        if(rtaParam != null)
-            downloadFileFromServer(rtaParam);
-        return;
-    }
+function downLoad(e){
+    navigator.notification.alert(e.url);
 }
 
 function getURLParams( name, url ) {
@@ -105,9 +103,9 @@ var app = {
     // Update DOM on a Received Event
     receivedEvent: function (id) {
         if (navigator.connection.type == Connection.NONE){
-            navigator.notification.alert('An internet connection is required to continue');
+            navigator.notification.alert('Una conexión a internet es necesaria para continuar');
         } else {
-            redirectTo("http://192.168.1.7/despEsquivel/views/index.html");
+            redirectTo("https://smartbookeepingapp.herokuapp.com/views/index.html");
         }
     }
 };

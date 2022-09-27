@@ -3,7 +3,7 @@
     <name>SmartBookkeeping</name>
     <description>Sample Apache Cordova App</description>
     <author email="dev@cordova.apache.org" href="https://cordova.apache.org">
-        Apache Cordova Team
+        SmartBookkeeping Team
     </author>
     <content src="index.html" />
     <access origin="*" />
